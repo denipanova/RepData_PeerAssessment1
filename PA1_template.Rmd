@@ -116,6 +116,71 @@ print(paste('The interval', median_max_int,'contains the maximum number of steps
 
 ## Imputing missing values
 
+###Code to describe and show a strategy for imputing missing data
+```{r echo=TRUE}
+
+data_imputed = data
+#where do we find NA values
+summary(data)
+num_na = sum(is.na(data$steps))
+print(num_na)
+
+```
+
+Now let's impute these values.  
+We impute with the **mean of the day** itself. If there are no values avaulable for the particular day,  
+than we take the **mean for all days** and all intervals. 
+```{r echo=TRUE}
+mean_all_days = mean(data_imputed$steps,na.rm = TRUE)
+
+for(i in 1:length(days)){
+  temp_data=data_imputed[data_imputed$date==days[i],]$steps
+  #impute the whole days
+  if(sum(is.na(temp_data))==length(temp_data)){
+    data_imputed[data_imputed$date==days[i],]$steps = mean_all_days
+  }else{
+    #take the mean of the day itself
+    mean_day = mean(temp_data,na.rm = TRUE)
+    temp_data = ifelse(is.na(temp_data),mean_day,temp_data)
+    data_imputed[data_imputed$date==days[i],]$steps = temp_data
+        
+  }
+}
+
+summary(data_imputed)
+```
+### Create histogram for the total number of steps taken each day
+
+```{r echo = TRUE}
+days = unique(data_imputed$date)
+#empty vector for the total steps
+tot_steps = c()
+#loop through every day
+for(i in 1:length(days)){
+  tot_today = sum(data_imputed[data_imputed$date==days[i],]$steps,na.rm = TRUE)
+  tot_steps = c(tot_steps,tot_today)
+}
+#create data_imputed frame to fill the date and the tot_steps
+tot_table = as.data.frame(matrix(NA,nrow = 61,ncol =2))
+colnames(tot_table)= c('days','tot_steps')
+tot_table$days = days
+tot_table$days = as.Date(as.character(tot_table$days))
+tot_table$tot_steps = tot_steps
+#plot it 
+hist(tot_table$tot_steps, col = 'red',
+     main = 'Histogram of the total steps\n (imputed data)',
+     xlab = 'Total number of steps')
+
+
+```
+
+Then let's calculate the mean of the imputed data. 
+```{r echo=TRUE}
+mean_total_steps = mean(data$steps, na.rm = TRUE)
+median_total_steps = median(data$steps, na.rm = TRUE)
+print(paste('Mean of total steps is',mean_total_steps))
+print(paste("median of total steps is",median_total_steps))
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
