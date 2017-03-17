@@ -104,6 +104,13 @@ plot(mm_table$intervals,mm_table$median,type = 'l', col = 'red',
      xlab = 'Time Intervals')
 
 ```
+### Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r echo=TRUE}
+mean_max_int = mm_table[mm_table$mean == max(mm_table$mean,na.rm = TRUE),]$intervals
+print(paste('The interval', mean_max_int,'contains the maximum number of steps based on the mean'))
+median_max_int = mm_table[mm_table$median == max(mm_table$median,na.rm = TRUE),]$intervals
+print(paste('The interval', median_max_int,'contains the maximum number of steps based on the median'))
+```
 
 
 
