@@ -1,7 +1,7 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
 output: html_document:
-#keep_md: true
+keep_md: true
 author: "Denitsa Panova"
 date: "March 16, 2017"
 ---
@@ -116,7 +116,7 @@ print(paste('The interval', median_max_int,'contains the maximum number of steps
 
 ## Imputing missing values
 
-###Code to describe and show a strategy for imputing missing data
+### Code to describe and show a strategy for imputing missing data
 ```{r echo=TRUE}
 
 data_imputed = data
@@ -181,6 +181,72 @@ median_total_steps = median(data$steps, na.rm = TRUE)
 print(paste('Mean of total steps is',mean_total_steps))
 print(paste("median of total steps is",median_total_steps))
 ```
-
+**Conclusion:** there is no significant impact in terms of the mean, median or the histogram distribution.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+###Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+First create mean for median for the weekends and weekdays.
+```{r echo=TRUE}
+#differentiate weekdays and weekends
+data$weekday = weekdays(as.Date(data$date))
+data$weekday = ifelse(data$weekday %in% c('Saturday', 'Sunday'),'weekend','weekday')
+
+#WEEKEND
+mm_table_end = as.data.frame(matrix(NA,nrow = 1, ncol = 2))
+#intervals = unique(data$interval)
+#cretae the table
+for(i in 1:length(intervals)){
+  mean_current = round(mean(data[data$interval == intervals[i] & data$weekday == 'weekend',]$steps,na.rm=TRUE),0)
+  median_current = median(data[data$interval == intervals[i] & data$weekday == 'weekend',]$steps,na.rm=TRUE)
+  mm_table_end = rbind(mm_table_end,c(mean_current,median_current))
+}
+
+#remove the first artificial row  
+mm_table_end = mm_table_end[-1,]
+#add the intervals
+mm_table_end = cbind(intervals,mm_table_end)
+colnames(mm_table_end) = c('intervals','mean','median')
+
+#WEEKDAY
+mm_table_day = as.data.frame(matrix(NA,nrow = 1, ncol = 2))
+#intervals = unique(data$interval)
+#cretae the table
+for(i in 1:length(intervals)){
+  mean_current = round(mean(data[data$interval == intervals[i] & data$weekday == 'weekday',]$steps,na.rm=TRUE),0)
+  median_current = median(data[data$interval == intervals[i] & data$weekday == 'weekday',]$steps,na.rm=TRUE)
+  mm_table_day = rbind(mm_table_day,c(mean_current,median_current))
+}
+
+#remove the first artificial row  
+mm_table_day = mm_table_day[-1,]
+#add intervals
+mm_table_day = cbind(intervals,mm_table_day)
+colnames(mm_table_day) = c('intervals','mean','median')
+```
+
+Then let's plot histogram in a panel.
+
+
+```{r echo=TRUE}
+#plot two histograms 
+par(mfrow=c(2,2))
+#weekend histogram mean
+hist(mm_table_end$mean,col='red',
+     main='Hist of average (mean)\n steps in Weekends',
+     xlab = 'Number of Steps')
+#weekday histogram mean
+hist(mm_table_day$mean,col='blue',
+     main='Hist of average(mean)\n steps in Weekdays',
+     xlab = 'Number of Steps')
+#weekend histogram median
+hist(mm_table_end$mean,col='red',
+     main='Hist of average (median)\n steps in Weekends',
+     xlab = 'Number of Steps')
+#weekday histogram median
+hist(mm_table_day$mean,col='blue',
+     main='Hist of average steps(median)\n in Weekdays',
+     xlab = 'Number of Steps')
+
+
+```
+**Conclusion:**  We see considerable difference between weekdays and weekends. 
