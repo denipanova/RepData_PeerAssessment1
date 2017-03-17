@@ -7,7 +7,7 @@ date: "March 16, 2017"
 ---
 
 
-## Loading and preprocessing the data
+# Loading and preprocessing the data
 It is now possible to collect a large amount of data about personal movement using   
 activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up.   
 These type of devices are part of the “quantified self” movement – a group of   
@@ -33,10 +33,39 @@ str(data)
 ```
 Everything looks ok with how thw data is read in. We note that there are 61 days.
 
+# Analysis 
+The purpose of this analysis is to use no additinal packages, so that it fits to the ideal of reproscibility. 
 
 ## What is mean total number of steps taken per day?
-
-
+For this part of the assignment, you can ignore the missing values in the dataset. 
+First, let's create histogram of the total number of steps each day.
+```{r echo=TRUE}
+days = unique(data$date)
+#empty vector for the total steps
+tot_steps = c()
+#loop through every day
+for(i in 1:length(days)){
+  tot_today = sum(data[data$date==days[i],]$steps,na.rm = TRUE)
+  tot_steps = c(tot_steps,tot_today)
+}
+#create data frame to fill the date and the tot_steps
+tot_table = as.data.frame(matrix(NA,nrow = 61,ncol =2))
+colnames(tot_table)= c('days','tot_steps')
+tot_table$days = days
+tot_table$days = as.Date(as.character(tot_table$days))
+tot_table$tot_steps = tot_steps
+#plot it 
+hist(tot_table$tot_steps, col = 'blue',
+     main = 'Histogram of the total steps\n (real data)',
+     xlab = 'Total number of steps')
+```
+Then, let's calculate what is the mean and the median. 
+```{r echo=TRUE}
+mean_total_steps = mean(data$steps, na.rm = TRUE)
+median_total_steps = median(data$steps, na.rm = TRUE)
+print(paste('Mean of total steps is',mean_total_steps))
+print(paste("median of total steps is",median_total_steps))
+```
 
 ## What is the average daily activity pattern?
 
