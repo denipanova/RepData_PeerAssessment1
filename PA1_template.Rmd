@@ -1,6 +1,6 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: html_document:
+output: html_document
 keep_md: true
 author: "Denitsa Panova"
 date: "March 16, 2017"
@@ -26,7 +26,7 @@ during the months of October and November, 2012 and include the number of steps 
 data = read.csv('activity.csv')
 ```
 
-_Note that you need to position the markdown and the data in the same directory._
+_Note that you need to position the markdown and the data in the same directory._  
 * Check what are the data type for each column 
 ```{r echo=TRUE}
 str(data)
@@ -58,7 +58,8 @@ tot_table$tot_steps = tot_steps
 hist(tot_table$tot_steps, col = 'blue',
      main = 'Histogram of the total steps\n (real data)',
      xlab = 'Total number of steps')
-```
+```  
+  
 Then, let's calculate what is the mean and the median. 
 ```{r echo=TRUE}
 mean_total_steps = mean(data$steps, na.rm = TRUE)
@@ -104,6 +105,7 @@ plot(mm_table$intervals,mm_table$median,type = 'l', col = 'red',
      xlab = 'Time Intervals')
 
 ```
+  
 ### Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 ```{r echo=TRUE}
 mean_max_int = mm_table[mm_table$mean == max(mm_table$mean,na.rm = TRUE),]$intervals
@@ -249,4 +251,5 @@ hist(mm_table_day$mean,col='blue',
 
 
 ```
+  
 **Conclusion:**  We see considerable difference between weekdays and weekends. 
