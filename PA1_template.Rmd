@@ -87,7 +87,7 @@ mm_table = mm_table[-1,]
 mm_table = cbind(days,mm_table)
 colnames(mm_table) = c('day','mean','median')
 mm_table$day = as.Date(mm_table$day)
-print(mm_table)
+head(mm_table)
 
 ```
 
