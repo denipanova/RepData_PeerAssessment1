@@ -1,7 +1,7 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
 output: html_document:
-keep_md: true
+#keep_md: true
 author: "Denitsa Panova"
 date: "March 16, 2017"
 ---
