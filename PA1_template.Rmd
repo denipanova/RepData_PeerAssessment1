@@ -68,14 +68,17 @@ print(paste("median of total steps is",median_total_steps))
 ```
 
 ## What is the average daily activity pattern?
-### Mean and median number of steps taken each day
-```{r echo = TRUE}
-mm_table = as.data.frame(matrix(NA,nrow = 1, ncol = 2))
 
+### Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+
+Create the data cut
+```{r echo=TRUE}
+mm_table = as.data.frame(matrix(NA,nrow = 1, ncol = 2))
+intervals = unique(data$interval)
 #cretae the table
-for(i in 1:length(days)){
-  mean_current = round(mean(data[data$date == days[i],]$steps,na.rm=TRUE),0)
-  median_current = median(data[data$date == days[i],]$steps,na.rm=TRUE)
+for(i in 1:length(intervals)){
+  mean_current = round(mean(data[data$interval == intervals[i],]$steps,na.rm=TRUE),0)
+  median_current = median(data[data$interval == intervals[i],]$steps,na.rm=TRUE)
   mm_table = rbind(mm_table,c(mean_current,median_current))
 }
 
@@ -83,21 +86,22 @@ for(i in 1:length(days)){
 mm_table = mm_table[-1,]
 #add the days 
 #ys_char = as.character(days)
-
-mm_table = cbind(days,mm_table)
-colnames(mm_table) = c('day','mean','median')
-mm_table$day = as.Date(mm_table$day)
+mm_table = cbind(intervals,mm_table)
+colnames(mm_table) = c('intervals','mean','median')
 head(mm_table)
 
 ```
-
-
-### Time series plot of the average number of steps taken
+Plot two graphs to indicate the difference in terms of median and mean. 
 ```{r echo=TRUE}
-plot(mm_table$day,mm_table$mean,type = 'l', col = 'blue',
-     main = 'Time series plot of\n the average number of steps every day',
+par(mfrow=c(2,1))
+plot(mm_table$intervals,mm_table$mean,type = 'l', col = 'blue',
+     main = 'Time series plot of the average(mean)\n number of steps every day',
      ylab = 'Average number of steps',
-     xlab = 'Time')
+     xlab = 'Time Intervals')
+plot(mm_table$intervals,mm_table$median,type = 'l', col = 'red',
+     main = 'Time series plot of the average(median)\n number of steps every day',
+     ylab = 'Average number of steps',
+     xlab = 'Time Intervals')
 
 ```
 
